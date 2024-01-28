@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from datetime import timedelta
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,14 +43,16 @@ INSTALLED_APPS = [
 
     'marketplace_api',
     'rest_framework',
-    'djoser',
+    'corsheaders',
     'accounts',
-    #'corsheaders',
+    
+
+
+
 ]
-#CORS_ALLOWED_ORIGINS = [
-   
-  # "http://localhost:3000",  # Assuming React runs on this port during development
-#]
+
+CORS_ALLOW_ALL_ORIGINS = True
+CSRF_COOKIE_SECURE = False
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
@@ -65,6 +68,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+
+    
 ]
 
 ROOT_URLCONF = 'marketplace.urls'
@@ -105,18 +111,22 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
-        'PORT': '3306', 
+        'PORT': '3306',
+         'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        }, 
+        
     }
 }
 
 
 # sent email 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'kaveendahelitha@gmail.com'
-EMAIL_HOST_PASSWORD = 'vyvambgauqevkjex'
-EMAIL_USE_TLS = True
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_PORT = 587
+#EMAIL_HOST_USER = 'kaveendahelitha@gmail.com'
+#EMAIL_HOST_PASSWORD = 'vyvambgauqevkjex'
+#EMAIL_USE_TLS = True
 
 
 # Password validation
@@ -154,50 +164,58 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-#STATICFILES_DIRS = [
-   # os.path.join(BASE_DIR, 'build/static')
-#]
-#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'build/static')
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 #json web token part
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',      
-    ),
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated'
+        'rest_framework.permissions.IsAuthenticated',
     ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ]
 }
 
-SIMPLE_JWT = {
-   'AUTH_HEADER_TYPES': ('JWT',),
-}
+#SIMPLE_JWT = {
+   #'AUTH_HEADER_TYPES': ('JWT',),
+  # 'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+  # 'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+   # 'AUTH_TOKEN_CLASSES': (
+    #    'rest_framework_simplejwt.tokens.AccessToken',
+    #)
+#}
 
-DJOSER = {
-    'LOGIN_FIELD': 'email',
-    'USER_CREATE_PASSWORD_RETYPE': True,
-    'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
-    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
-    'SEND_CONFIRMATION_EMAIL': True,
-    'SET_USERNAME_RETYPE': True,
-    'SET_PASSWORD_RETYPE': True,
-    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': 'activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
-    #'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
-    #'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:8000/google', 'http://localhost:8000/facebook'],
-    'SERIALIZERS': {
-        'user_create': 'accounts.serializers.UserCreateSerializer',
-        'user': 'accounts.serializers.UserCreateSerializer',
-        'current_user': 'accounts.serializers.UserCreateSerializer',
-        'user_delete': 'djoser.serializers.UserDeleteSerializer',
-    }
-}
+#DJOSER = {
+#    'LOGIN_FIELD': 'email',
+#    'USER_CREATE_PASSWORD_RETYPE': True,
+#    'USERNAME_CHANGED_EMAIL_CONFIRMATION': True,
+#    'PASSWORD_CHANGED_EMAIL_CONFIRMATION': True,
+#    'SEND_CONFIRMATION_EMAIL': True,
+#    'SET_USERNAME_RETYPE': True,
+#    'SET_PASSWORD_RETYPE': True,
+#    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+#    'USERNAME_RESET_CONFIRM_URL': 'email/reset/confirm/{uid}/{token}',
+#    'ACTIVATION_URL': 'activate/{uid}/{token}',
+#    'SEND_ACTIVATION_EMAIL': True,
+#    #'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
+#    #'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:8000/google', 'http://localhost:8000/facebook'],
+#    'SERIALIZERS': {
+#        'user_create': 'accounts.serializers.UserCreateSerializer',
+#        'user': 'accounts.serializers.UserCreateSerializer',
+#        'current_user': 'accounts.serializers.UserCreateSerializer',
+#        'user_delete': 'djoser.serializers.UserDeleteSerializer',
+#    }
+#}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'accounts.UserAccount'
+# settings.py
+
+
+CORS_ALLOW_ALL_ORIGINS=True
