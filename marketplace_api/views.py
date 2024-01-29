@@ -5,8 +5,14 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import UserProfile
+from .models import Category
+from .models import Product
 from .serializers import UserProfileSerializer
+from .serializers import CategorySerializer
+from .serializers import ProductSerializer
+from rest_framework import viewsets, permissions
 
+from rest_framework import viewsets
 
 class GetUserProfileView(APIView):
     def get(self, request, format=None):
@@ -43,3 +49,18 @@ class UpdateUserProfileView(APIView):
             return Response({ 'profile': marketplace_api.data, 'username': str(username) })
         except:
             return Response({ 'error': 'Something went wrong when updating profile' })
+
+
+class ProductView(viewsets.ModelViewSet):
+    authentication_classes = []  # Allow unauthenticated access
+    permission_classes = []  
+    queryset=Product.objects.all()
+    serializer_class = ProductSerializer
+
+class CategoryView(viewsets.ModelViewSet):
+    
+    authentication_classes = []  # Allow unauthenticated access
+    permission_classes = []  
+    queryset=Category.objects.all()
+    serializer_class = CategorySerializer
+    http_method_names = ['get', 'post', 'put', 'patch', 'delete']

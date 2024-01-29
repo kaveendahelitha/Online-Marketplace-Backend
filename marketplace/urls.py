@@ -17,7 +17,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
+from django.conf import settings
+from django.conf.urls.static import static
+from marketplace_api import views
 
+from marketplace_api.views import ProductView, CategoryView
+
+from rest_framework import routers
+route= routers.DefaultRouter()
+route.register("productview",ProductView, basename='productview')
+route.register("categoryview",CategoryView, basename='categoryview')
 
 
 
@@ -29,8 +38,9 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('accounts/', include('accounts.urls')),
     path('profile/', include('marketplace_api.urls')),
+    path('api/',include (route.urls)),
     
-]
+]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns += [re_path(r'^.*', TemplateView.as_view(template_name='index.html'))]
 
