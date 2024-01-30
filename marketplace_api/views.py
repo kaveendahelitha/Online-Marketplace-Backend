@@ -56,7 +56,7 @@ class ProductView(viewsets.ModelViewSet):
     permission_classes = []  
     queryset=Product.objects.all()
     serializer_class = ProductSerializer
-
+    
 class CategoryView(viewsets.ModelViewSet):
     
     authentication_classes = []  # Allow unauthenticated access
